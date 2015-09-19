@@ -1,6 +1,8 @@
 package main
 
 import (
+	"html/template"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 )
@@ -11,6 +13,23 @@ func main() {
 }
 
 func someFunc(w http.ResponseWriter, req *http.Request) {
+	first, second := generateStyles()
+
+	data := map[string]string{
+		"first":  first,
+		"second": second,
+	}
+
+	page, err := ioutil.ReadFile("templates/home.template")
+
+	w.Header().Add("Content Type", "text/html")
+	tmpl, err := template.New("anyNameForTemplate").Parse(string(page))
+	if err == nil {
+		tmpl.Execute(w, data)
+	}
+}
+
+func generateStyles() (string, string) {
 	styles := []string{
 		"Popping",
 		"Boogaloo",
@@ -41,6 +60,5 @@ func someFunc(w http.ResponseWriter, req *http.Request) {
 		second = rand.Intn(len(styles))
 	}
 
-	output := styles[first] + " + " + styles[second]
-	w.Write([]byte(output))
+	return styles[first], styles[second]
 }
