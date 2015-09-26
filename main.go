@@ -36,8 +36,7 @@ var styles []string = []string{
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	http.HandleFunc("/", homePage)
-	// css, js, img files
-	http.HandleFunc("/public/", publicResources)
+	http.HandleFunc("/public/", publicResources) // css, js, img files
 	http.HandleFunc("/styles", stylesFunc)
 	http.ListenAndServe(":8080", nil)
 }
