@@ -38,6 +38,7 @@ func main() {
 	http.HandleFunc("/", homePage)
 	// css, js, img files
 	http.HandleFunc("/public/", publicResources)
+	http.HandleFunc("/styles", stylesFunc)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -90,6 +91,13 @@ func publicResources(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(404)
 		w.Write([]byte("Error 404 - " + http.StatusText(404)))
 	}
+}
+
+func stylesFunc(w http.ResponseWriter, req *http.Request) {
+	first, second := generateStyles()
+	ret := first + " + " + second
+	w.Header().Add("Content-Type", "text/plain")
+	w.Write([]byte(ret))
 }
 
 func generateStyles() (string, string) {
