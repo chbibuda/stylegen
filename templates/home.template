@@ -30,7 +30,11 @@ var StylesBox = React.createClass({
 	    });
     },
 	render: function() {
-		var styles = this.state.data.first + " + " + this.state.data.second
+		var styles = "";
+		if (Object.keys(this.state.data).length > 0) {
+			styles = this.state.data.first + " + " + this.state.data.second;
+		}
+
 		return (<div id="styles">{styles}<button onClick={this.getStyles}>Reroll</button></div>)
 	}
 });
