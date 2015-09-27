@@ -38,6 +38,7 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/public/", publicResources) // css, js, img files
+	http.HandleFunc("/web/", publicResources)
 	http.HandleFunc("/styles", stylesFunc)
 	http.ListenAndServe(":8080", nil)
 }
@@ -53,7 +54,7 @@ func homePage(w http.ResponseWriter, req *http.Request) {
 		"second": second,
 	}
 
-	page, err := ioutil.ReadFile("templates/home.template")
+	page, err := ioutil.ReadFile("views/home.template")
 
 	w.Header().Add("Content-Type", "text/html")
 	tmpl, err := template.New("anyNameForTemplate").Parse(string(page))
