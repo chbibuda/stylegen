@@ -14,6 +14,9 @@ var StylesBox = React.createClass({
 		return {data: []}
     },
     componentDidMount: function() {
+    	this.getStyles();
+    },
+    getStyles: function() {
 	    $.ajax({
 	      url: this.props.url,
 	      dataType: 'json',
@@ -28,7 +31,7 @@ var StylesBox = React.createClass({
     },
 	render: function() {
 		var styles = this.state.data.first + " + " + this.state.data.second
-		return (<div id="styles">{styles}</div>)
+		return (<div id="styles">{styles}<button onClick={this.getStyles}>Reroll</button></div>)
 	}
 });
 
@@ -40,6 +43,5 @@ React.render(
 </head>
 <body>
     <div id="content"></div>
-    <button onclick="clicked()">reroll</button>
 </body>
 </html>
