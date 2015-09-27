@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -94,8 +95,13 @@ func publicResources(w http.ResponseWriter, req *http.Request) {
 
 func stylesFunc(w http.ResponseWriter, req *http.Request) {
 	first, second := generateStyles()
-	ret := first + " + " + second
-	w.Header().Add("Content-Type", "text/plain")
+	styleMap := map[string]string{
+		"first":  first,
+		"second": second,
+	}
+
+	ret, _ := json.Marshal(styleMap)
+	w.Header().Add("Content-Type", "application/json")
 	w.Write([]byte(ret))
 }
 
