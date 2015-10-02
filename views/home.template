@@ -1,85 +1,121 @@
 <!doctype html>
 <html class="no-js" lang="en">
 
-  <head>
-    <meta charset="utf-8" />
-    <!-- if you remove this meta tag, the NSA will spy on you through your Xbox Kinect camera -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foundation</title>
-    <link rel="stylesheet" href="public/css/app.css" />
-    <script src="web/foundation/bower_components/modernizr/modernizr.js"></script>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <!-- if you remove this meta tag, the NSA will spy on you through your Xbox Kinect camera -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foundation</title>
+  <link rel="stylesheet" href="public/css/app.css" />
+  <script src="web/foundation/bower_components/modernizr/modernizr.js"></script>
+</head>
 
-  <body>
-  	<div class="row">
-  		<div class="fixed">
+<body>
+ <div class="row">
+  <div class="fixed">
     <nav class="top-bar" data-topbar role="navigation">
-  <ul class="title-area">
-    <li class="name">
-      <h1><a href="#">Stylegen</a></h1>
-    </li>
-  </ul>
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="#">Stylegen</a></h1>
+        </li>
+      </ul>
 
-  <section class="top-bar-section">
-    <!-- Right Nav Section -->
-    <ul class="right">
-      <li class="active"><a href="#" data-reveal-id="firstModal">Post your jam</a></li>
-    </ul>
-  </section>
-</nav>
-</div>
+      <section class="top-bar-section">
+        <!-- Right Nav Section -->
+        <ul class="right">
+          <li class="active"><a href="#" data-reveal-id="firstModal">Post your jam</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
 </div>
 <div id="firstModal" class="reveal-modal" data-reveal>
-    <h2>Post Link</h2>
-    <p>Share your ideas by posting a link to a video of your jam combining different styles. Your video will show up under the Inspiration section to inspire others and spread your ideas.</p>
-    <form>
-    <select data-options="align:down">
+  <h2>Post Link</h2>
+  <p>Share your ideas by posting a link to a video of your jam combining different styles. Your video will show up under the Inspiration section to inspire others and spread your ideas.</p>
+  <form>
+    <select id='style-dropdown1' data-options="align:down">
       <option value="">Style #1</option>
-      <option value="Popping">Popping</option>
-      <option value="Waving">Waving</option>
-      <option value="Tutting">Tutting</option>
-      <option value="Twist-O-Flex">Twist-O-Flex</option>
     </select>
-    <select>
+    <select id='style-dropdown2' data-options="align:down">
       <option value="">Style #2</option>
-      <option value="Popping">Popping</option>
-      <option value="Waving">Waving</option>
-      <option value="Tutting">Tutting</option>
-      <option value="Twist-O-Flex">Twist-O-Flex</option>
     </select>
     <label>Link:
       <input type="text" placeholder="Paste your link here..." />
     </label>
-        <a href="#" class="button">Post</a>
+    <input type="submit" class="button"></input>
   </form>
-    <a class="close-reveal-modal">&#215;</a>
-  </div>
+  <a class="close-reveal-modal">&#215;</a>
+</div>
 <div id="styles">
-  <div id="style1" class="row">
-    <div class="large-12 column">Boogaloo</div>
+  <div class="row">
+    <div id="style1" class="large-12 column">Waving</div>
   </div>
   <div class="row">
     <div class="large-12 column">+</div>
   </div>
-  <div id="style2" class="row">
-    <div class="large-12 column">Sleepy style</div>
+  <div class="row">
+    <div id="style2" class="large-12 column">Tutting</div>
   </div>
 </div>
 <div class="row">
   <div class="small-12 small-centered large-6 column">
-    <a href="#" class="large button expand">Reroll</a>
+    <button onClick="reroll();" class="large button expand">Reroll</button>
   </div> 
 </div>
 <div class="row">
-    <div class="small-12 small-centered large-12 column">
+  <div class="small-12 small-centered large-12 column">
     <a href="#" class="large button dropdown expand">Inspiration</a>
   </div>
-  </div>
-    <!-- body content here -->
+</div>
 
-    <script src="web/foundation/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="web/foundation/bower_components/foundation/js/foundation.min.js"></script>
-    <script src="web/foundation/js/app.js"></script>
-  </body>
+<!-- this section should stay at the bottom! -->
+<script src="web/foundation/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="web/foundation/bower_components/foundation/js/foundation.min.js"></script>
+<script src="web/foundation/js/app.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  reroll();
+  listStyles();
+});
+
+function reroll() {
+  $.ajax({
+    url: '/reroll',
+    dataType: 'json',
+    cache: false,
+    success: function(data) {
+      $('#style1').html(data.first);
+      $('#style2').html(data.second);
+    },
+    error: function(xhr, status, err) {
+     console.error('/reroll', status, err.toString());
+   }
+ });
+}
+
+function listStyles() {
+  $.ajax({
+    url: '/liststyles',
+    dataType: 'json',
+    cache: false,
+    success: function(data) {
+      $.each(data, function (i, item) {
+        $('#style-dropdown1').append($('<option>', { 
+          value: item,
+          text : item 
+        }));
+        $('#style-dropdown2').append($('<option>', { 
+          value: item,
+          text : item 
+        }));    
+      });
+    },
+    error: function(xhr, status, err) {
+     console.error('/liststyles', status, err.toString());
+   }
+ });
+}
+</script>
+</body>
 
 </html>

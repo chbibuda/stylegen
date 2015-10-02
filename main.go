@@ -39,7 +39,8 @@ func main() {
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/public/", publicResources) // css, js, img files
 	http.HandleFunc("/web/", publicResources)
-	http.HandleFunc("/styles", stylesFunc)
+	http.HandleFunc("/reroll", stylesFunc)
+	http.HandleFunc("/liststyles", getAllStyles)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -102,6 +103,12 @@ func stylesFunc(w http.ResponseWriter, req *http.Request) {
 	}
 
 	ret, _ := json.Marshal(styleMap)
+	w.Header().Add("Content-Type", "application/json")
+	w.Write([]byte(ret))
+}
+
+func getAllStyles(w http.ResponseWriter, req *http.Request) {
+	ret, _ := json.Marshal(styles)
 	w.Header().Add("Content-Type", "application/json")
 	w.Write([]byte(ret))
 }
